@@ -34,6 +34,7 @@ This project provides a ready-to-use development environment with the following 
 ├── README.md           # This file
 └── stack/             # Docker Compose stack
     ├── compose.yml    # Main Docker Compose configuration
+    ├── download-ollama-models.sh  # Script to download base AI models
     ├── update-ollama-models.sh  # Script to update AI models
     └── README.md      # Detailed stack documentation
 ```

@@ -66,6 +66,11 @@ docker compose down
 docker compose logs -f [service_name]
 ```
 
+### Download base Ollama models
+```bash
+./download-ollama-models.sh
+```
+
 ### Update Ollama models
 ```bash
 ./update-ollama-models.sh
@@ -129,12 +134,25 @@ The Ollama service is configured for AMD ROCm GPU acceleration:
 
 ## Model Management
 
-Use the included script to update Ollama models:
+Use the included scripts to manage Ollama models:
+
+### Download base models
+```bash
+./download-ollama-models.sh
+```
+
+### Update existing models
 ```bash
 ./update-ollama-models.sh
 ```
 
-This script will:
+The download script will:
+1. Check if Ollama container is running
+2. Show current models and models to download
+3. Prompt for confirmation
+4. Download predefined base models
+
+The update script will:
 1. List current models
 2. Prompt for confirmation
 3. Update all installed models
