@@ -1,0 +1,89 @@
+services:
+  pgadmin4:
+    container_name: pga
+    image: dpage/pgadmin4:9.6.0
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@asdf.de
+      PGADMIN_DEFAULT_PASSWORD: password
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - 80:80
+  psql1:
+    container_name: p17 
+    image: postgres:17.5-bookworm
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password 
+      POSTGRES_DB: vision
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    container_name: r8
+    image: redis:8.0.3-bookworm
+    restart: always
+    ports:
+      - 6379:6379
+    command: ["redis-server", "--requirepass", "password", "--appendonly", "yes"]
+    environment:
+      - REDIS_USER=root
+      - REDIS_PASSWORD=password
+    volumes:
+      - redis_data:/data
+  redisinsight:
+    container_name: ri 
+    image: redis/redisinsight:2.70
+    restart: always
+    volumes:
+      - redisinsight:/data
+    ports:
+      - 5540:5540
+  pgvector1:
+      container_name: pgv
+      image: pgvector/pgvector:0.8.0-pg17
+      restart: unless-stopped
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+      volumes:
+          - pgvector17_data:/var/lib/postgresql/data
+      logging:
+        driver: json-file
+        options:
+          max-size: 10m
+          max-file: "7"
+      ports:
+          - 5433:5432
+  ollama:
+    image: ollama/ollama:0.10.1-rocm
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    devices:
+      - "/dev/kfd"
+      - "/dev/dri"
+    volumes:
+      - ollama:/root/.ollama
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.6.18
+    container_name: owu
+    restart: unless-stopped
+    ports:
+      - 3000:8080
+    volumes:
+      - open-webui:/app/backend/data
+
+volumes:
+  postgres_data:
+  pgvector17_data:
+  redisinsight:
+  pgadmin:
+  ollama:
+  open-webui:
+  redis_data:
+    driver: local
